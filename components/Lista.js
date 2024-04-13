@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, SafeAreaView, FlatList } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from "react-native";
 
 const dados = [
     {
@@ -11,20 +11,31 @@ const dados = [
     },
 ]
 
-const Item = ({card}) => (
-    <View style={styles.item}>
-        <Text style={styles.tituloItem}>{card.title}</Text>
-    </View>
+const Item = ({card, navigation}) => (
+    <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Detalhes', {card: card.title})}>
+        <View>
+            <Text style={styles.tituloItem}>{card.title}</Text>
+        </View>
+    </TouchableOpacity>
 );
 
-const Lista = () => {
+const Lista = ({ navigation }) => {
+    const renderItem = ({item}) => {
+        return (
+            <Item 
+                card={item}
+                navigation={navigation}
+            />
+        );
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.containerDentro}>
                 <Text style={styles.titulo}>Lista</Text>
                 <FlatList 
                     data={dados}
-                    renderItem={({item}) => <Item card={item} />}
+                    renderItem={renderItem}
                     keyExtractor={item => item.id.toString()}
                 />
             </View>
