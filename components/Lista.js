@@ -1,18 +1,9 @@
 import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from "react-native";
-
-const dados = [
-    {
-        id: 1,
-        title: 'Teste 1'
-    },
-    {
-        id: 2,
-        title: 'Teste 2'
-    },
-]
+import { useCardContext } from "./CardContext";
+import { useContext } from "react";
 
 const Item = ({card, navigation}) => (
-    <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Detalhes', {card: card.title})}>
+    <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Detalhes', {card: card})}>
         <View>
             <Text style={styles.tituloItem}>{card.title}</Text>
         </View>
@@ -20,6 +11,8 @@ const Item = ({card, navigation}) => (
 );
 
 const Lista = ({ navigation }) => {
+    const {cards} = useCardContext();
+
     const renderItem = ({item}) => {
         return (
             <Item 
@@ -29,12 +22,23 @@ const Lista = ({ navigation }) => {
         );
     }
 
+    if (cards.length < 1) {
+        return (
+            <SafeAreaView style={styles.container}>
+                <View style={styles.containerDentro}>
+                    <Text style={styles.titulo}>Lista</Text>
+                    <Text style={styles.semItens}>Sem itens adicionados</Text>
+                </View>
+            </SafeAreaView>
+        );
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.containerDentro}>
                 <Text style={styles.titulo}>Lista</Text>
                 <FlatList 
-                    data={dados}
+                    data={cards}
                     renderItem={renderItem}
                     keyExtractor={item => item.id.toString()}
                 />
@@ -50,6 +54,8 @@ const styles = StyleSheet.create({
     },
     containerDentro: {
         padding: 34,
+        height: '100%',
+        paddingBottom: 0
     },
     titulo: {
         fontSize: 30,
@@ -64,6 +70,10 @@ const styles = StyleSheet.create({
     tituloItem: {
         fontWeight: 'bold',
         overflow: 'hidden'
+    },
+    semItens: {
+        textAlign: 'center',
+        marginTop: 10
     }
 })
 

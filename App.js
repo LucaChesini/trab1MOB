@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Lista from './components/Lista';
 import Adicionar from './components/Adicionar';
 import Detalhes from './components/Detalhes';
+import { CardProvider } from './components/CardContext';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -13,7 +14,7 @@ const Tab = createBottomTabNavigator();
 function Cards() {
   return (
     <Stack.Navigator>
-        <Stack.Screen name="Card" component={Lista} />
+        <Stack.Screen name="Listagem" component={Lista} />
         <Stack.Screen name="Detalhes" component={Detalhes} />
     </Stack.Navigator>
   );
@@ -21,12 +22,14 @@ function Cards() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Tab.Navigator screenOptions={{ headerShown: false }}>
-        <Tab.Screen name="Lista" component={Cards} />
-        <Tab.Screen name="Adicionar" component={Adicionar} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <CardProvider>
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="Lista" component={Cards} options={{ headerShown: false }}/>
+          <Tab.Screen name="Adicionar" component={Adicionar} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </CardProvider>
   );
 }
 

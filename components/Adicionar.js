@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView, TextInput, Button } from "react-native";
+import { useCardContext } from "./CardContext";
 
 
 const Adicionar = () => {
-    const [titulo, setTitulo] = React.useState('');
-    const [descricao, setDescricao] = React.useState('');
+    const [titulo, setTitulo] = useState('');
+    const [descricao, setDescricao] = useState('');
+    const { addCard } = useCardContext();
+
+    const adicionarCard = () => {
+        if(titulo.trim() !== '') {
+            addCard({ title: titulo, description: descricao });
+            setTitulo('');
+            setDescricao('');
+        }
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -12,16 +22,18 @@ const Adicionar = () => {
                 <Text style={styles.titulo}>Adicionar</Text>
                 <TextInput 
                     style={styles.inputs} 
+                    placeholder="Titulo"
                     value={titulo} 
                     onChangeText={setTitulo}
                 />
                 <TextInput 
                     multiline={true}
                     style={[styles.inputs, styles.inputLinhas]} 
+                    placeholder="Descrição"
                     value={descricao} 
                     onChangeText={setDescricao}
                 />
-                <Button title="Enviar" />
+                <Button title="Enviar" onPress={adicionarCard}/>
             </View>
         </SafeAreaView>
     );
