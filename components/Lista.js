@@ -5,7 +5,7 @@ import { useContext } from "react";
 const Item = ({card, navigation}) => (
     <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Detalhes', {card: card})}>
         <View>
-            <Text style={styles.tituloItem}>{card.title}</Text>
+            <Text style={styles.tituloItem}>{card.titulo}</Text>
         </View>
     </TouchableOpacity>
 );

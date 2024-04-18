@@ -15,8 +15,8 @@ const Detalhes = ({ route }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.containerDentro}>
-                <Text style={styles.titulo}>{card.title}</Text>
-                <Text style={styles.descricao}>{card.description}</Text>
+                <Text style={styles.titulo}>{card.titulo}</Text>
+                <Text style={styles.descricao}>{card.descricao}</Text>
                 <Button title="Remover" onPress={() => excluirCard(card.id)}/>
             </View>
         </SafeAreaView>

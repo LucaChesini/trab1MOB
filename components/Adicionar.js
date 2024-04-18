@@ -10,7 +10,7 @@ const Adicionar = () => {
 
     const adicionarCard = () => {
         if(titulo.trim() !== '') {
-            addCard({ title: titulo, description: descricao });
+            addCard({ titulo, descricao });
             setTitulo('');
             setDescricao('');
         }
