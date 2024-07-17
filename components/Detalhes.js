@@ -17,6 +17,9 @@ const Detalhes = ({ route }) => {
             <View style={styles.containerDentro}>
                 <Text style={styles.titulo}>{card.titulo}</Text>
                 <Text style={styles.descricao}>{card.descricao}</Text>
+                {card.responsavelSelecionado ? (
+                    <Text style={styles.responsavel}>Responsável: {card.responsavelSelecionado}</Text>
+                ) : null}
                 <Button title="Remover" onPress={() => excluirCard(card.id)}/>
             </View>
         </SafeAreaView>
@@ -39,6 +42,10 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     descricao: {
+        marginBottom: 10
+    },
+    responsavel: {
+        fontWeight: 'bold',
         marginBottom: 15
     }
 });
