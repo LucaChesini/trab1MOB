@@ -7,6 +7,11 @@ import Lista from './components/Lista';
 import Adicionar from './components/Adicionar';
 import Detalhes from './components/Detalhes';
 import { CardProvider } from './components/CardContext';
+import ObtendoToken from './components/ObtendoToken';
+import { useReducer, useState, useMemo, useEffect } from 'react';
+import Login from './components/Login';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AuthContext from './auth';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -21,15 +26,77 @@ function Cards() {
 }
 
 export default function App() {
+    const [state, dispatch] = useReducer(
+      (prevState, action) => {
+        switch (action.type) {
+          case 'RESTORE_TOKEN':
+            return {
+              ...prevState,
+              userToken: action.token,
+              isLoading: false,
+            };
+          case 'SIGN_IN':
+            return {
+              ...prevState,
+              isSignout: false,
+              userToken: action.token,
+            };
+        }
+      },
+      {
+        isLoading: true,
+        userToken: null,
+      }
+    );
+
+    useEffect(() => {
+      const bootstrapAsync = async () => {
+        let userToken;
+        try {
+          userToken = await AsyncStorage.getItem('@storage_Key');
+        } catch (e) {
+          console.log(e);
+        }
+        dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+      };
+      bootstrapAsync();
+    }, []);
+
+    const authContext = useMemo(
+      () => ({
+        signIn: async (data) => {
+          let myToken = 'token-autenticacao';
+          await AsyncStorage.setItem('@storage_Key', myToken);
+          dispatch({ type: 'SIGN_IN', token: myToken });
+        },
+        signUp: async (data) => {
+          dispatch({ type: 'SIGN_IN', token: 'token-autenticacao' });
+        },
+      }),
+      []
+    );
+
+  if (state.isLoading) {
+    return <ObtendoToken />;
+  }
+
   return (
-    <CardProvider>
-      <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen name="Lista" component={Cards} options={{ headerShown: false }}/>
-          <Tab.Screen name="Adicionar" component={Adicionar} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </CardProvider>
+    <AuthContext.Provider value={authContext}>
+      <CardProvider>
+        <NavigationContainer>
+          {state.userToken == null ? (
+            <Stack.Navigator>
+              <Stack.Screen name="Login" component={Login} />
+            </Stack.Navigator>
+          ) : (
+            <Tab.Navigator>
+              <Tab.Screen name="Lista" component={Cards} options={{ headerShown: false }}/>
+              <Tab.Screen name="Adicionar" component={Adicionar} />
+            </Tab.Navigator>
+          )}
+        </NavigationContainer>
+      </CardProvider>
+    </AuthContext.Provider>
   );
 }
 
