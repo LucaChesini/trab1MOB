@@ -53,7 +53,7 @@ export default function App() {
       const bootstrapAsync = async () => {
         let userToken;
         try {
-          userToken = await AsyncStorage.getItem('@storage_Key');
+          userToken = await AsyncStorage.getItem('@access_token');
         } catch (e) {
           console.log(e);
         }
@@ -66,7 +66,7 @@ export default function App() {
       () => ({
         signIn: async (data) => {
           let myToken = 'token-autenticacao';
-          await AsyncStorage.setItem('@storage_Key', myToken);
+          await AsyncStorage.setItem('@access_token', myToken);
           dispatch({ type: 'SIGN_IN', token: myToken });
         },
         signUp: async (data) => {
