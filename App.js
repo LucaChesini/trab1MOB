@@ -11,7 +11,8 @@ import ObtendoToken from './components/ObtendoToken';
 import { useReducer, useState, useMemo, useEffect } from 'react';
 import Login from './components/Login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AuthContext from './auth';
+import AuthContext from './components/auth';
+import Logoff from './components/Logoff';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -41,6 +42,12 @@ export default function App() {
               isSignout: false,
               userToken: action.token,
             };
+          case 'SIGN_OUT':
+            return {
+              ...prevState,
+              isSignout: true,
+              userToken: null,
+            };
         }
       },
       {
@@ -69,8 +76,9 @@ export default function App() {
           await AsyncStorage.setItem('@access_token', myToken);
           dispatch({ type: 'SIGN_IN', token: myToken });
         },
-        signUp: async (data) => {
-          dispatch({ type: 'SIGN_IN', token: 'token-autenticacao' });
+        signOut: async () => {
+          await AsyncStorage.removeItem('@access_token');
+          dispatch({ type: 'SIGN_OUT' });
         },
       }),
       []
@@ -92,6 +100,7 @@ export default function App() {
             <Tab.Navigator>
               <Tab.Screen name="Lista" component={Cards} options={{ headerShown: false }}/>
               <Tab.Screen name="Adicionar" component={Adicionar} />
+              <Tab.Screen name="Sair" component={Logoff} />
             </Tab.Navigator>
           )}
         </NavigationContainer>

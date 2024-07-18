@@ -50,6 +50,7 @@ const Adicionar = () => {
                 <Picker
                     selectedValue={responsavelSelecionado}
                     onValueChange={(item) => setResponsavelSelecionado(item)}
+                    style={styles.inputs}
                 >
                     <Picker.Item label="Selecione um responsável" value="" />
                     {responsaveis.map(responsavel => (
